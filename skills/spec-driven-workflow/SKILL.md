@@ -1,9 +1,9 @@
 ---
-name: spec-driven-implementation
+name: spec-driven-workflow
 description: Drive a spec-first workflow for substantial features by writing PRODUCT.md before implementation, writing TECH.md when warranted, and keeping both specs updated as implementation evolves. Use when starting a significant feature, planning agent-driven implementation, or when the user wants product and tech specs checked into source control.
 ---
 
-# spec-driven-implementation
+# spec-driven-workflow
 
 Drive a spec-first workflow for substantial features in the target product, app, service, API, CLI, library, or data model.
 
@@ -13,17 +13,17 @@ Use this skill for significant features where a written spec will improve implem
 
 Specs should usually live in:
 
-- `specs/<id>/PRODUCT.md`
-- `specs/<id>/TECH.md`
+- `specs-driven/<id>/PRODUCT.md`
+- `specs-driven/<id>/TECH.md`
 
 `<id>` should match the product and tech spec skills:
 
-- a Linear ticket number, such as `specs/APP-1234/PRODUCT.md`
-- a GitHub issue id prefixed with `gh-`, such as `specs/gh-4567/PRODUCT.md`
-- a GitLab issue id prefixed with `gl-`, such as `specs/gl-7890/PRODUCT.md`
-- a short kebab-case feature name, such as `specs/vertical-tabs-hover-sidecar/PRODUCT.md`
+- a Linear ticket number, such as `specs-driven/APP-1234/PRODUCT.md`
+- a GitHub issue id prefixed with `gh-`, such as `specs-driven/gh-4567/PRODUCT.md`
+- a GitLab issue id prefixed with `gl-`, such as `specs-driven/gl-7890/PRODUCT.md`
+- a short kebab-case feature name, such as `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md`
 
-`specs/` should contain only id-named directories as direct children. Do not create engineer-named subdirectories there.
+`specs-driven/` should contain only id-named directories as direct children. Do not create engineer-named subdirectories there.
 
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they do not, ask for a short feature name to use as the directory id. Only create a new ticket or issue when the user explicitly asks for one; use the relevant Linear, GitHub, or GitLab tools, and ask the user directly if required project, team, repo, labels, or metadata are unclear.
 
@@ -57,7 +57,7 @@ Evaluate the size, ambiguity, and risk of the feature. If specs will not meaning
 
 Before implementation, create `PRODUCT.md` describing the desired user-facing behavior.
 
-Use the `write-product-spec` skill to produce it. The product spec should define:
+Use the `spec-write-product` skill to produce it. The product spec should define:
 
 - what problem is being solved
 - the desired user experience
@@ -70,7 +70,7 @@ Reference the source ticket, issue, or feature id in the spec when one exists.
 
 ### 3. Write the tech spec when warranted
 
-Use the `write-tech-spec` skill for substantial or ambiguous implementation work.
+Use the `spec-write-tech` skill for substantial or ambiguous implementation work.
 
 Prefer a tech spec when:
 
@@ -83,7 +83,7 @@ It is acceptable to write the tech spec after an e2e prototype if that leads to 
 
 ### 4. Implement approved specs
 
-After the specs are approved, use the `implement-specs` skill to build from the approved `PRODUCT.md` and `TECH.md` when present.
+After the specs are approved, use the `spec-implement` skill to build from the approved `PRODUCT.md` and `TECH.md` when present.
 
 The implementation can often be pushed in the same PR as the product and tech specs. As the engineer iterates, keep `PRODUCT.md`, `TECH.md`, code changes, and tests in that same PR so the review reflects the feature that will actually ship.
 
@@ -131,6 +131,6 @@ Before considering the work complete, make sure verification maps back to the sp
 
 ## Related Skills
 
-- `implement-specs`
-- `write-product-spec`
-- `write-tech-spec`
+- `spec-implement`
+- `spec-write-product`
+- `spec-write-tech`

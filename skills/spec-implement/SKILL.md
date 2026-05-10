@@ -1,9 +1,9 @@
 ---
-name: implement-specs
+name: spec-implement
 description: Implement an approved feature from PRODUCT.md and TECH.md when present, keeping specs and code aligned in the same PR as implementation evolves. Use after the relevant product and technical specs are approved enough to start building, or after PRODUCT.md is approved for a feature whose implementation does not warrant a separate TECH.md.
 ---
 
-# implement-specs
+# spec-implement
 
 Implement an approved feature from `PRODUCT.md` and `TECH.md` when present.
 
@@ -11,12 +11,12 @@ Implement an approved feature from `PRODUCT.md` and `TECH.md` when present.
 
 Use this skill after the relevant specs are approved enough to start implementation. The goal is to build the feature described by the specs while keeping the checked-in specs and the implementation aligned as the work evolves.
 
-Approved specs should live directly under an id-named directory in `specs/`, for example:
+Approved specs should live directly under an id-named directory in `specs-driven/`, for example:
 
-- `specs/APP-1234/PRODUCT.md` and `specs/APP-1234/TECH.md`
-- `specs/gh-4567/PRODUCT.md` and `specs/gh-4567/TECH.md`
-- `specs/gl-7890/PRODUCT.md` and `specs/gl-7890/TECH.md`
-- `specs/vertical-tabs-hover-sidecar/PRODUCT.md` and `specs/vertical-tabs-hover-sidecar/TECH.md`
+- `specs-driven/APP-1234/PRODUCT.md` and `specs-driven/APP-1234/TECH.md`
+- `specs-driven/gh-4567/PRODUCT.md` and `specs-driven/gh-4567/TECH.md`
+- `specs-driven/gl-7890/PRODUCT.md` and `specs-driven/gl-7890/TECH.md`
+- `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md` and `specs-driven/vertical-tabs-hover-sidecar/TECH.md`
 
 The id should match the sibling `PRODUCT.md` and `TECH.md` files. `TECH.md` is optional when the feature did not warrant one.
 
@@ -93,6 +93,6 @@ Prefer:
 
 ## Related Skills
 
-- `spec-driven-implementation`
-- `write-product-spec`
-- `write-tech-spec`
+- `spec-driven-workflow`
+- `spec-write-product`
+- `spec-write-tech`

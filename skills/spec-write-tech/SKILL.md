@@ -1,9 +1,9 @@
 ---
-name: write-tech-spec
+name: spec-write-tech
 description: Write a TECH.md spec for a significant feature in any product, app, service, API, CLI, library, or data model after researching the current codebase and implementation constraints. Use when the user asks for a technical spec, implementation plan, architecture doc, or validation plan tied to a product spec or behavior-first specification.
 ---
 
-# write-tech-spec
+# spec-write-tech
 
 Write a `TECH.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
@@ -11,14 +11,14 @@ Write a `TECH.md` spec for a significant feature in the target product, app, ser
 
 The tech spec should translate product intent into an implementation plan that fits the existing codebase, documents architectural choices, and makes the work easier for agents to execute and reviewers to evaluate.
 
-Write specs to `specs/<id>/TECH.md`, where `<id>` is one of:
+Write specs to `specs-driven/<id>/TECH.md`, where `<id>` is one of:
 
-- a Linear ticket number (e.g. `specs/APP-1234/TECH.md`)
-- a GitHub issue id, prefixed with `gh-` (e.g. `specs/gh-4567/TECH.md`)
-- a GitLab issue id, prefixed with `gl-` (e.g. `specs/gl-7890/TECH.md`)
-- a short kebab-case feature name (e.g. `specs/vertical-tabs-hover-sidecar/TECH.md`)
+- a Linear ticket number (e.g. `specs-driven/APP-1234/TECH.md`)
+- a GitHub issue id, prefixed with `gh-` (e.g. `specs-driven/gh-4567/TECH.md`)
+- a GitLab issue id, prefixed with `gl-` (e.g. `specs-driven/gl-7890/TECH.md`)
+- a short kebab-case feature name (e.g. `specs-driven/vertical-tabs-hover-sidecar/TECH.md`)
 
-Match the id used by the sibling `PRODUCT.md` when one exists. `specs/` should contain only id-named directories as direct children.
+Match the id used by the sibling `PRODUCT.md` when one exists. `specs-driven/` should contain only id-named directories as direct children.
 
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
@@ -26,7 +26,7 @@ Ticket / issue references are optional. If the user has a Linear ticket, GitHub 
 
 Use this skill when the implementation spans multiple modules, has meaningful architectural tradeoffs, or when reviewers will benefit from seeing the plan before or alongside the code. For pure UI changes or straightforward fixes, a tech spec is often unnecessary.
 
-Prefer to have a `PRODUCT.md` first so the technical plan is anchored to agreed behavior. If no `PRODUCT.md` exists and the feature behavior is still unclear, first invoke or suggest `write-product-spec` before drafting `TECH.md`. If the implementation approach is still too uncertain after code research, ask the user before building an e2e prototype; only prototype first when it is explicitly useful and safe, then write the tech spec from what was learned.
+Prefer to have a `PRODUCT.md` first so the technical plan is anchored to agreed behavior. If no `PRODUCT.md` exists and the feature behavior is still unclear, first invoke or suggest `spec-write-product` before drafting `TECH.md`. If the implementation approach is still too uncertain after code research, ask the user before building an e2e prototype; only prototype first when it is explicitly useful and safe, then write the tech spec from what was learned.
 
 ## Research before writing
 
@@ -77,6 +77,6 @@ For large features, the implementer may optionally keep a `DECISIONS.md` file su
 
 ## Related Skills
 
-- `implement-specs`
-- `write-product-spec`
-- `spec-driven-implementation`
+- `spec-implement`
+- `spec-write-product`
+- `spec-driven-workflow`

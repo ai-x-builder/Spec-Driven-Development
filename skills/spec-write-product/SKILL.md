@@ -1,9 +1,9 @@
 ---
-name: write-product-spec
+name: spec-write-product
 description: Write a PRODUCT.md spec for a significant user-facing feature or externally consumed surface in any product, app, service, API, CLI, library, or data model. Use when the user asks for a product spec, desired behavior doc, PRD, or behavior-first spec, wants to define feature behavior before implementation, or when the feature is substantial or behaviorally ambiguous enough that a written spec would improve implementation or review.
 ---
 
-# write-product-spec
+# spec-write-product
 
 Write a `PRODUCT.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
@@ -20,16 +20,16 @@ The product spec should make the desired behavior unambiguous enough that an age
 
 The spec should describe behavior from that consumer's perspective: the shape of the surface, the operations they can perform, what they see back, invariants they can rely on, and edge cases they must handle — without prescribing how the surface is implemented underneath.
 
-Implementation details, validation, and test planning live in a companion `TECH.md`, produced by the `write-tech-spec` skill. Writing the product spec is usually the first step of a two-step process: once `PRODUCT.md` is agreed on, invoke `write-tech-spec` to produce `TECH.md` for the same feature (or let the user know that's the expected next step). The product spec should be written so the tech spec can be written directly from it.
+Implementation details, validation, and test planning live in a companion `TECH.md`, produced by the `spec-write-tech` skill. Writing the product spec is usually the first step of a two-step process: once `PRODUCT.md` is agreed on, invoke `spec-write-tech` to produce `TECH.md` for the same feature (or let the user know that's the expected next step). The product spec should be written so the tech spec can be written directly from it.
 
-Write specs to `specs/<id>/PRODUCT.md`, where `<id>` is one of:
+Write specs to `specs-driven/<id>/PRODUCT.md`, where `<id>` is one of:
 
-- a Linear ticket number (e.g. `specs/APP-1234/PRODUCT.md`)
-- a GitHub issue id, prefixed with `gh-` (e.g. `specs/gh-4567/PRODUCT.md`)
-- a GitLab issue id, prefixed with `gl-` (e.g. `specs/gl-7890/PRODUCT.md`)
-- a short kebab-case feature name (e.g. `specs/vertical-tabs-hover-sidecar/PRODUCT.md`)
+- a Linear ticket number (e.g. `specs-driven/APP-1234/PRODUCT.md`)
+- a GitHub issue id, prefixed with `gh-` (e.g. `specs-driven/gh-4567/PRODUCT.md`)
+- a GitLab issue id, prefixed with `gl-` (e.g. `specs-driven/gl-7890/PRODUCT.md`)
+- a short kebab-case feature name (e.g. `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md`)
 
-`specs/` should contain only id-named directories as direct children — no engineer-named subdirectories.
+`specs-driven/` should contain only id-named directories as direct children — no engineer-named subdirectories.
 
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
@@ -61,7 +61,7 @@ Optional sections — include only when they add signal beyond the core. Omit th
 - **Figma** — Include with a link when one exists, or an explicit `Figma: none provided` note when design matters but no mock exists. Omit entirely for non-visual features. See "Figma mocks" above.
 - **Open questions** — Prefer inline `**Open question:** …` next to the relevant behavior. Include a dedicated section only if there are multiple unresolved questions worth collecting.
 
-Do not include Validation, Success criteria, or Testing sections. Validation and test planning live in the companion `TECH.md` (produced by `write-tech-spec`). Write Behavior as numbered invariants that are testable on their own — the tech spec can reference them directly.
+Do not include Validation, Success criteria, or Testing sections. Validation and test planning live in the companion `TECH.md` (produced by `spec-write-tech`). Write Behavior as numbered invariants that are testable on their own — the tech spec can reference them directly.
 
 ## The Behavior section
 
@@ -108,9 +108,9 @@ For large features, the implementer may optionally keep a `DECISIONS.md` file su
 
 ## Related Skills
 
-- `implement-specs`
-- `write-tech-spec`
-- `spec-driven-implementation`
+- `spec-implement`
+- `spec-write-tech`
+- `spec-driven-workflow`
 
 ## Example Behavior section
 
