@@ -34,7 +34,7 @@ Ticket / issue references are optional. If the user has a Linear ticket or GitHu
 
 ## Before writing
 
-Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and how the feature will be validated. Ask the user for missing product intent rather than guessing.
+Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and validation expectations for later `TECH.md` use only. Ask the user for missing product intent rather than guessing.
 
 ### Figma mocks
 

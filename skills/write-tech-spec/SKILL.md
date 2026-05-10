@@ -25,7 +25,7 @@ Ticket / issue references are optional. If the user has a Linear ticket or GitHu
 
 Use this skill when the implementation spans multiple modules, has meaningful architectural tradeoffs, or when reviewers will benefit from seeing the plan before or alongside the code. For pure UI changes or straightforward fixes, a tech spec is often unnecessary.
 
-Prefer to have a `PRODUCT.md` first so the technical plan is anchored to agreed behavior. If the implementation is still too uncertain, build an e2e prototype first and then write the tech spec from what was learned.
+Prefer to have a `PRODUCT.md` first so the technical plan is anchored to agreed behavior. If no `PRODUCT.md` exists and the feature behavior is still unclear, first invoke or suggest `write-product-spec` before drafting `TECH.md`. If the implementation is still too uncertain, build an e2e prototype first and then write the tech spec from what was learned.
 
 ## Research before writing
 
