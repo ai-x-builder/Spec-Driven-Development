@@ -1,19 +1,19 @@
 ---
 name: write-product-spec
-description: Write a PRODUCT.md spec for a significant user-facing feature in Warp, focused on detailed behavior and validation. Use when the user asks for a product spec, desired behavior doc, or PRD, wants to define feature behavior before implementation, or when the feature is substantial or behaviorally ambiguous enough that a written spec would improve implementation or review.
+description: Write a PRODUCT.md spec for a significant user-facing feature or externally consumed surface in any product, app, service, API, CLI, library, or data model. Use when the user asks for a product spec, desired behavior doc, PRD, or behavior-first spec, wants to define feature behavior before implementation, or when the feature is substantial or behaviorally ambiguous enough that a written spec would improve implementation or review.
 ---
 
 # write-product-spec
 
-Write a `PRODUCT.md` spec for a significant feature in Warp.
+Write a `PRODUCT.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
 ## Overview
 
 The product spec should make the desired behavior unambiguous enough that an agent can implement it correctly and avoid regressions. Describe the feature purely from the user's perspective — what the user sees, does, and experiences, and the invariants that must hold for them. Do not include implementation details (internal types, state layout, module boundaries, data flow, algorithms).
 
-"User" is not limited to the end user of the Warp app. It means whoever consumes the surface being designed:
+"User" means whoever consumes the surface being designed:
 
-- For UI / UX features: the human using Warp.
+- For UI / UX features: the human using the product or application.
 - For a data model: the code that reads and writes that model.
 - For an API, protocol, or library: the callers of that API — other services, client code, plugins, or agents.
 - For a CLI tool or developer-facing surface: the developer invoking it.
@@ -30,11 +30,11 @@ Write specs to `specs/<id>/PRODUCT.md`, where `<id>` is one of:
 
 `specs/` should contain only id-named directories as direct children — no engineer-named subdirectories.
 
-Ticket / issue references are optional. If the user has a Linear ticket or GitHub issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket or GitHub issue when the user explicitly asks for one; in that case use the Linear MCP tools or `gh` CLI respectively (and `ask_user_question` if team, labels, or repo are unclear).
+Ticket / issue references are optional. If the user has a Linear ticket or GitHub issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket or GitHub issue when the user explicitly asks for one; in that case use the available Linear or GitHub tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
 ## Before writing
 
-Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and how the feature will be validated. Use `ask_user_question` for missing context rather than guessing.
+Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and how the feature will be validated. Ask the user for missing product intent rather than guessing.
 
 ### Figma mocks
 
@@ -113,12 +113,12 @@ For large features, the implementer may optionally keep a `DECISIONS.md` file su
 
 ## Example Behavior section
 
-A sample Behavior section for a hypothetical feature: rendering GitHub-flavored Markdown tables in the Warp block list. It demonstrates the expected shape — numbered, testable, user-perspective invariants that enumerate defaults, edge cases, malformed input, streaming, selection/copy, search, sharing, theming, and cross-surface consistency, with one inline open question.
+A sample Behavior section for a hypothetical feature: rendering GitHub-flavored Markdown tables in a command output viewer that supports Markdown. It demonstrates the expected shape — numbered, testable, user-perspective invariants that enumerate defaults, edge cases, malformed input, streaming, selection/copy, search, sharing, theming, and cross-surface consistency, with one inline open question.
 
 ````markdown
 ## Behavior
 
-1. When a terminal output block contains a GitHub-flavored Markdown table (a header row, a separator row of one or more `---` segments, and one or more body rows, all delimited by `|`), that table renders as a visually formatted table in the block — not as raw pipe-delimited text.
+1. When an output block contains a GitHub-flavored Markdown table (a header row, a separator row of one or more `---` segments, and one or more body rows, all delimited by `|`), that table renders as a visually formatted table in the block — not as raw pipe-delimited text.
 
 2. The table renders with:
    - A visually distinct header row.
@@ -132,7 +132,7 @@ A sample Behavior section for a hypothetical feature: rendering GitHub-flavored 
 
 5. Horizontal scrolling: when the table's total width exceeds the block width — many columns, or wide columns that can't reasonably be narrowed — the table becomes horizontally scrollable within the block. Scrolling horizontally reveals off-screen columns without clipping or truncating them. Vertical scrolling of the block continues to work independently of table scroll.
 
-6. When the block is resized (terminal resize, pane split, sidebar open/close), the table reflows to the new width without losing row or column order.
+6. When the block is resized (window resize, pane split, sidebar open/close), the table reflows to the new width without losing row or column order.
 
 7. Empty cells render as visibly empty (same row height as surrounding cells, no placeholder text). A row with all empty cells still renders as a row.
 
@@ -154,9 +154,9 @@ A sample Behavior section for a hypothetical feature: rendering GitHub-flavored 
 
 13. Search within a block (find-in-block) matches against cell text content. Matches highlight in place in the rendered cell; navigating matches scrolls the table into view, including horizontally if the match is in an off-screen column.
 
-14. Sharing or exporting a block (Warp Drive, share link, save as file) preserves the original markdown source, not the rendered form.
+14. Sharing or exporting a block (share link, save as file, archive, or another product-specific export surface) preserves the original markdown source, not the rendered form.
 
-15. Theming: table borders, header backgrounds, alternating row shading (if any), and link/code styles all come from the active Warp theme. No hard-coded colors.
+15. Theming: table borders, header backgrounds, alternating row shading (if any), and link/code styles all come from the active product theme or design system. No hard-coded colors.
 
 16. Markdown tables render consistently wherever block-list markdown already renders — command output, agent responses, and any other block type that supports inline markdown. The same input produces the same table in each surface.
 

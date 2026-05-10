@@ -1,11 +1,11 @@
 ---
 name: write-tech-spec
-description: Write a TECH.md spec for a significant Warp feature after researching the current codebase and implementation constraints. Use when the user asks for a technical spec, implementation plan, or architecture doc tied to a product spec.
+description: Write a TECH.md spec for a significant feature in any product, app, service, API, CLI, library, or data model after researching the current codebase and implementation constraints. Use when the user asks for a technical spec, implementation plan, architecture doc, or validation plan tied to a product spec or behavior-first specification.
 ---
 
 # write-tech-spec
 
-Write a `TECH.md` spec for a significant feature in Warp.
+Write a `TECH.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
 ## Overview
 
@@ -19,7 +19,7 @@ Write specs to `specs/<id>/TECH.md`, where `<id>` is one of:
 
 Match the id used by the sibling `PRODUCT.md` when one exists. `specs/` should contain only id-named directories as direct children.
 
-Ticket / issue references are optional. If the user has a Linear ticket or GitHub issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket or GitHub issue when the user explicitly asks for one; in that case use the Linear MCP tools or `gh` CLI respectively (and `ask_user_question` if team, labels, or repo are unclear).
+Ticket / issue references are optional. If the user has a Linear ticket or GitHub issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket or GitHub issue when the user explicitly asks for one; in that case use the available Linear or GitHub tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
 ## When to use
 
