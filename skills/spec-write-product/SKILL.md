@@ -20,7 +20,7 @@ The product spec should make the desired behavior unambiguous enough that an age
 
 The spec should describe behavior from that consumer's perspective: the shape of the surface, the operations they can perform, what they see back, invariants they can rely on, and edge cases they must handle — without prescribing how the surface is implemented underneath.
 
-Implementation details, validation, and test planning live in a companion `TECH.md`, produced later by the `spec-write-tech` skill. Do not write or update `TECH.md` in the same phase as `PRODUCT.md`. After creating or materially changing `PRODUCT.md`, stop at the PRODUCT Review Gate and wait for the user to approve the product spec or explicitly ask to continue to the TECH phase.
+Implementation details, validation, and test planning live in a companion `TECH.md`, produced later by the `spec-write-tech` skill. Do not write or update `TECH.md` in the same phase as `PRODUCT.md`. After creating or materially changing `PRODUCT.md`, create or update sibling `GATES.json` with both statuses set to `pending`, then stop at the PRODUCT Review Gate and wait for the user to approve the product spec or explicitly ask to continue to the TECH phase.
 
 Write specs to `specs-driven/<id>/PRODUCT.md`, where `<id>` is one of:
 
@@ -30,6 +30,22 @@ Write specs to `specs-driven/<id>/PRODUCT.md`, where `<id>` is one of:
 - a short kebab-case feature name (e.g. `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md`)
 
 `specs-driven/` should contain only id-named directories as direct children — no engineer-named subdirectories.
+
+The sibling gate state file is `specs-driven/<id>/GATES.json`. For new specs or materially changed product specs, it should contain:
+
+```json
+{
+  "version": 1,
+  "product": {
+    "status": "pending"
+  },
+  "tech": {
+    "status": "pending"
+  }
+}
+```
+
+Use only `pending` and `approved` statuses. Do not add hashes, revision ids, timestamps, approvers, or multiple artifact fields.
 
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
@@ -111,7 +127,7 @@ If you find yourself writing the same idea in Summary, Problem, Goals, and Behav
 
 Approved specs may ship in the same PR as the implementation. As implementation evolves, update `PRODUCT.md` in the same PR when user-facing behavior or UX details change. The checked-in spec should describe the feature that actually ships.
 
-If `PRODUCT.md` changes after `TECH.md` exists, treat the current `TECH.md` as stale until it is updated from the latest reviewed product spec.
+If `PRODUCT.md` changes after `TECH.md` exists, treat the current `TECH.md` as stale until it is updated from the latest reviewed product spec. Set both `product.status` and `tech.status` in `GATES.json` to `pending`.
 
 ## PRODUCT Review Gate
 
@@ -121,8 +137,9 @@ After writing or materially changing `PRODUCT.md`, stop before invoking `spec-wr
 - no blocking open questions remain
 - non-blocking open questions have recorded assumptions and impact
 - behavior is concrete enough that the TECH author does not need to guess product intent
+- `product.status` is updated to `approved` in `GATES.json`
 
-If the gate does not pass, revise `PRODUCT.md` and remain in the product phase.
+If the gate does not pass, revise `PRODUCT.md`, keep both statuses in `GATES.json` as `pending`, and remain in the product phase.
 
 For large features, the implementer may optionally keep a `DECISIONS.md` file summarizing concrete decisions made during design and implementation. Offer it when it would help future agents; otherwise skip it.
 

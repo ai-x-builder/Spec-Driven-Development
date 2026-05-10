@@ -11,10 +11,13 @@ Drive a staged spec-first workflow for substantial features in the target produc
 
 Use this skill for significant features where written specs will improve implementation quality, reduce ambiguity, or make review easier. Be pragmatic: not every change needs specs. Small, local, low-risk work can skip this workflow after a brief rationale.
 
-Once a task enters spec-driven workflow, both specs are required:
+Once a task enters spec-driven workflow, both specs and the gate state file are required:
 
 - `specs-driven/<id>/PRODUCT.md`
 - `specs-driven/<id>/TECH.md`
+- `specs-driven/<id>/GATES.json`
+
+### id-named
 
 `<id>` should match the product and tech spec skills:
 
@@ -28,6 +31,34 @@ Once a task enters spec-driven workflow, both specs are required:
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they do not, ask for a short feature name to use as the directory id. Only create a new ticket or issue when the user explicitly asks for one; use the relevant Linear, GitHub, or GitLab tools, and ask the user directly if required project, team, repo, labels, or metadata are unclear.
 
 These specs should largely be written by agents, not by hand, and should be checked into source control so they can be reviewed and kept current with the code.
+
+### gate state
+
+`GATES.json` is the source of truth for review gate pass state. It uses this minimal shape:
+
+```json
+{
+  "version": 1,
+  "product": {
+    "status": "pending"
+  },
+  "tech": {
+    "status": "pending"
+  }
+}
+```
+
+`product.status` and `tech.status` may only be `pending` or `approved`. Do not add content hashes, revision ids, approval timestamps, approver fields, or support for multiple product or tech artifacts. Existing spec directories that do not have `GATES.json` can be backfilled when that spec is touched again.
+
+Gate state updates are part of the workflow:
+
+- a new spec directory starts with both statuses set to `pending`
+- creating or materially modifying `PRODUCT.md` sets both statuses to `pending`
+- passing PRODUCT Review Gate sets `product.status` to `approved`
+- writing or materially modifying `TECH.md` sets `tech.status` to `pending`
+- passing TECH Review Gate sets `tech.status` to `approved`
+- writing `TECH.md` requires `product.status` to be `approved`
+- starting implementation requires both statuses to be `approved`
 
 ## When specs are required
 
@@ -65,11 +96,11 @@ Blocking questions prevent the current phase from advancing. Non-blocking questi
 
 Evaluate the size, ambiguity, and risk of the feature. If specs will not meaningfully improve execution or review, skip this workflow with a brief rationale and focus on implementation and verification.
 
-If you enter spec-driven workflow, do not skip either spec. `PRODUCT.md` must be written and reviewed before `TECH.md`; `TECH.md` must be written and reviewed before implementation.
+If you enter spec-driven workflow, do not skip either spec or `GATES.json`. `PRODUCT.md` must be written and reviewed before `TECH.md`; `TECH.md` must be written and reviewed before implementation.
 
 ### 3. Write PRODUCT.md
 
-Before implementation, create `PRODUCT.md` describing the desired user-facing behavior.
+Before implementation, create `PRODUCT.md` describing the desired user-facing behavior. Also create or update sibling `GATES.json` so both statuses are `pending`.
 
 Use the `spec-write-product` skill to produce it. The product spec should define:
 
@@ -93,12 +124,13 @@ After writing or materially changing `PRODUCT.md`, stop before technical plannin
 - no blocking open questions remain
 - non-blocking questions have recorded assumptions and impact
 - the behavior is specific enough that `TECH.md` does not need to guess product intent
+- `product.status` is updated to `approved` in `GATES.json`
 
-If the gate does not pass, update `PRODUCT.md` and remain in the product phase.
+If the gate does not pass, update `PRODUCT.md`, keep both statuses `pending`, and remain in the product phase.
 
 ### 5. Write TECH.md
 
-After the PRODUCT Review Gate passes, use the `spec-write-tech` skill to produce `TECH.md` from the latest reviewed `PRODUCT.md` and current codebase research.
+After the PRODUCT Review Gate passes and `product.status` is `approved`, use the `spec-write-tech` skill to produce `TECH.md` from the latest reviewed `PRODUCT.md` and current codebase research.
 
 `TECH.md` should cover:
 
@@ -115,18 +147,19 @@ If `PRODUCT.md` changes after `TECH.md` is generated, treat `TECH.md` as stale u
 
 ### 6. TECH Review Gate
 
-After writing or materially changing `TECH.md`, stop before implementation. The gate passes only when:
+After writing or materially changing `TECH.md`, set `tech.status` to `pending` in `GATES.json` and stop before implementation. The gate passes only when:
 
 - the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
 - the technical plan is consistent with `PRODUCT.md`
 - key risks, module boundaries, and validation steps are clear
 - implementation can start without redesigning the main approach
+- `tech.status` is updated to `approved` in `GATES.json`
 
-If the gate does not pass, update `TECH.md`. If the update affects product behavior, update `PRODUCT.md` and pass PRODUCT Review Gate again.
+If the gate does not pass, update `TECH.md` and keep `tech.status` as `pending`. If the update affects product behavior, update `PRODUCT.md`, set both statuses to `pending`, and pass PRODUCT Review Gate again.
 
 ### 7. Implement approved specs
 
-After both review gates pass, use the `spec-implement` skill to build from the approved `PRODUCT.md` and `TECH.md`.
+After both review gates pass and both statuses are `approved` in `GATES.json`, use the `spec-implement` skill to build from the approved `PRODUCT.md` and `TECH.md`.
 
 The implementation can often be pushed in the same PR as the product and tech specs. As the engineer iterates, keep `PRODUCT.md`, `TECH.md`, code changes, and tests in that same PR so the review reflects the feature that will actually ship.
 
@@ -147,6 +180,8 @@ Update `PRODUCT.md` when:
 - UX details or edge cases change
 - behavior invariants or externally visible acceptance expectations change
 
+When `PRODUCT.md` changes, set both statuses in `GATES.json` to `pending`.
+
 Update `TECH.md` when:
 
 - the implementation approach changes
@@ -154,11 +189,15 @@ Update `TECH.md` when:
 - risks, dependencies, or rollout details change
 - the testing or validation plan changes
 
+When `TECH.md` changes without changing product behavior, set `tech.status` in `GATES.json` to `pending`.
+
+After any status reset during implementation, return to the relevant review gate and get the affected status back to `approved` before considering the work complete.
+
 The checked-in specs should describe the feature that actually ships, not just the initial intent. Keep those spec updates in the same PR as the related code changes whenever practical.
 
 ### 9. Verify behavior against the specs
 
-Before considering the work complete, make sure verification maps back to both specs. Prefer tests and artifacts that validate the product behavior directly:
+Before considering the work complete, make sure verification maps back to both specs and that `GATES.json` has both statuses set to `approved`. Prefer tests and artifacts that validate the product behavior directly:
 
 - unit tests using the repository's existing test framework
 - integration or end-to-end tests for critical user flows

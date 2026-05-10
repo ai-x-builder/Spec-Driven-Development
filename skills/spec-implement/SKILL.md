@@ -13,12 +13,12 @@ Use this skill only after the relevant product and technical specs are approved 
 
 Approved specs should live directly under an id-named directory in `specs-driven/`, for example:
 
-- `specs-driven/APP-1234/PRODUCT.md` and `specs-driven/APP-1234/TECH.md`
-- `specs-driven/gh-4567/PRODUCT.md` and `specs-driven/gh-4567/TECH.md`
-- `specs-driven/gl-7890/PRODUCT.md` and `specs-driven/gl-7890/TECH.md`
-- `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md` and `specs-driven/vertical-tabs-hover-sidecar/TECH.md`
+- `specs-driven/APP-1234/PRODUCT.md`, `specs-driven/APP-1234/TECH.md`, and `specs-driven/APP-1234/GATES.json`
+- `specs-driven/gh-4567/PRODUCT.md`, `specs-driven/gh-4567/TECH.md`, and `specs-driven/gh-4567/GATES.json`
+- `specs-driven/gl-7890/PRODUCT.md`, `specs-driven/gl-7890/TECH.md`, and `specs-driven/gl-7890/GATES.json`
+- `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md`, `specs-driven/vertical-tabs-hover-sidecar/TECH.md`, and `specs-driven/vertical-tabs-hover-sidecar/GATES.json`
 
-The id should match the sibling `PRODUCT.md` and `TECH.md` files. For work that entered spec-driven workflow, both files are required before implementation. If a change is small enough that both specs would be excessive, it should skip spec-driven workflow instead of using this skill.
+The id should match the sibling `PRODUCT.md`, `TECH.md`, and `GATES.json` files. For work that entered spec-driven workflow, all three files are required before implementation. If a change is small enough that both specs would be excessive, it should skip spec-driven workflow instead of using this skill.
 
 In many cases, the implementation should be pushed in the same PR as the product and tech specs. As the engineer iterates, changes to `PRODUCT.md`, `TECH.md`, and the code should all be pushed in that same PR so review stays anchored to the feature that will actually ship.
 
@@ -28,11 +28,12 @@ Before using this skill:
 
 - confirm that `PRODUCT.md` exists
 - confirm that `TECH.md` exists
-- confirm that PRODUCT Review Gate passed
-- confirm that TECH Review Gate passed
+- confirm that `GATES.json` exists
+- confirm that `product.status` is `approved` in `GATES.json`, which is the persisted record that PRODUCT Review Gate passed
+- confirm that `tech.status` is `approved` in `GATES.json`, which is the persisted record that TECH Review Gate passed
 - confirm that `TECH.md` is based on the latest reviewed `PRODUCT.md`
 
-If `TECH.md` is missing, or if `PRODUCT.md` changed after `TECH.md` without a corresponding TECH update, do not implement yet. Return to the relevant spec phase.
+If `TECH.md` or `GATES.json` is missing, either status is not `approved`, or `PRODUCT.md` changed after `TECH.md` without a corresponding TECH update, do not implement yet. Return to the relevant spec phase.
 
 ## Workflow
 
@@ -74,6 +75,8 @@ In particular:
 
 - update `PRODUCT.md` when user-facing behavior, UX, edge cases, behavior invariants, or externally visible acceptance expectations change
 - update `TECH.md` when architecture, sequencing, module boundaries, or validation strategy change
+- update `GATES.json` in the same step: PRODUCT changes set both statuses to `pending`; TECH-only changes set `tech.status` to `pending`
+- after any status reset, return to the relevant review gate and get the affected status back to `approved` before considering implementation complete
 - keep those updates in the same PR as the corresponding code changes
 
 If a `PRODUCT.md` change invalidates `TECH.md`, update `TECH.md` from the latest reviewed product spec before continuing broad implementation.
@@ -82,7 +85,7 @@ The PR should describe the feature that actually ships, not just the initial dra
 
 ### 5. Verify against the specs
 
-Before considering the work complete, verify that the code matches both current specs.
+Before considering the work complete, verify that the code matches both current specs and that `GATES.json` has both statuses set to `approved`.
 
 Prefer:
 

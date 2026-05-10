@@ -20,6 +20,8 @@ Write specs to `specs-driven/<id>/TECH.md`, where `<id>` is one of:
 
 Match the id used by the sibling `PRODUCT.md` when one exists. `specs-driven/` should contain only id-named directories as direct children.
 
+The sibling gate state file is `specs-driven/<id>/GATES.json`. It stores only `version`, `product.status`, and `tech.status`; statuses may only be `pending` or `approved`.
+
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
 ## Prerequisites
@@ -27,7 +29,8 @@ Ticket / issue references are optional. If the user has a Linear ticket, GitHub 
 Before writing `TECH.md`, confirm:
 
 - sibling `PRODUCT.md` exists
-- PRODUCT Review Gate passed because the user explicitly approved `PRODUCT.md`, or explicitly asked to continue to TECH
+- sibling `GATES.json` exists
+- `product.status` is `approved` in `GATES.json`, which is the persisted record that PRODUCT Review Gate passed because the user explicitly approved `PRODUCT.md` or explicitly asked to continue to TECH
 - no blocking product open questions remain
 - non-blocking product open questions have recorded assumptions and impact
 
@@ -78,20 +81,21 @@ If Context and Proposed changes end up describing the same files and state from 
 
 ## Keep the spec current
 
-Approved specs may ship in the same PR as the implementation. Update `TECH.md` in the same PR when module boundaries, implementation sequencing, risks, validation strategy, or rollout assumptions change. The checked-in spec should describe the implementation that actually ships.
+Approved specs may ship in the same PR as the implementation. Update `TECH.md` in the same PR when module boundaries, implementation sequencing, risks, validation strategy, or rollout assumptions change, and set `tech.status` in `GATES.json` to `pending`. The checked-in spec should describe the implementation that actually ships.
 
-If `PRODUCT.md` changes after `TECH.md` is written, treat the current `TECH.md` as stale until it is updated from the latest reviewed `PRODUCT.md`.
+If `PRODUCT.md` changes after `TECH.md` is written, treat the current `TECH.md` as stale until it is updated from the latest reviewed `PRODUCT.md`. Set both statuses in `GATES.json` to `pending`.
 
 ## TECH Review Gate
 
-After writing or materially changing `TECH.md`, stop before implementation. The gate passes only when:
+After writing or materially changing `TECH.md`, set `tech.status` in `GATES.json` to `pending` and stop before implementation. The gate passes only when:
 
 - the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
 - the technical plan is consistent with `PRODUCT.md`
 - risks, module boundaries, and validation steps are clear enough for implementation
 - the implementer can start without redesigning the main approach
+- `tech.status` is updated to `approved` in `GATES.json`
 
-If the gate does not pass, revise `TECH.md`. If the revision changes product behavior, update `PRODUCT.md` and pass PRODUCT Review Gate again before updating `TECH.md`.
+If the gate does not pass, revise `TECH.md` and keep `tech.status` as `pending`. If the revision changes product behavior, update `PRODUCT.md`, set both statuses in `GATES.json` to `pending`, and pass PRODUCT Review Gate again before updating `TECH.md`.
 
 For large features, the implementer may optionally keep a `DECISIONS.md` file summarizing concrete decisions. Offer it when it would help future agents; otherwise skip it.
 
