@@ -1,15 +1,15 @@
 ---
 name: spec-implement
-description: Implement an approved feature from PRODUCT.md and TECH.md when present, keeping specs and code aligned in the same PR as implementation evolves. Use after the relevant product and technical specs are approved enough to start building, or after PRODUCT.md is approved for a feature whose implementation does not warrant a separate TECH.md.
+description: Implement an approved feature only after PRODUCT.md and TECH.md have both passed their review gates, keeping specs and code aligned in the same PR as implementation evolves. Use after the relevant product and technical specs are approved enough to start building.
 ---
 
 # spec-implement
 
-Implement an approved feature from `PRODUCT.md` and `TECH.md` when present.
+Implement an approved feature from reviewed `PRODUCT.md` and `TECH.md`.
 
 ## Overview
 
-Use this skill after the relevant specs are approved enough to start implementation. The goal is to build the feature described by the specs while keeping the checked-in specs and the implementation aligned as the work evolves.
+Use this skill only after the relevant product and technical specs are approved enough to start implementation. The goal is to build the feature described by the specs while keeping the checked-in specs and the implementation aligned as the work evolves.
 
 Approved specs should live directly under an id-named directory in `specs-driven/`, for example:
 
@@ -18,7 +18,7 @@ Approved specs should live directly under an id-named directory in `specs-driven
 - `specs-driven/gl-7890/PRODUCT.md` and `specs-driven/gl-7890/TECH.md`
 - `specs-driven/vertical-tabs-hover-sidecar/PRODUCT.md` and `specs-driven/vertical-tabs-hover-sidecar/TECH.md`
 
-The id should match the sibling `PRODUCT.md` and `TECH.md` files. `TECH.md` is optional when the feature did not warrant one.
+The id should match the sibling `PRODUCT.md` and `TECH.md` files. For work that entered spec-driven workflow, both files are required before implementation. If a change is small enough that both specs would be excessive, it should skip spec-driven workflow instead of using this skill.
 
 In many cases, the implementation should be pushed in the same PR as the product and tech specs. As the engineer iterates, changes to `PRODUCT.md`, `TECH.md`, and the code should all be pushed in that same PR so review stays anchored to the feature that will actually ship.
 
@@ -27,8 +27,12 @@ In many cases, the implementation should be pushed in the same PR as the product
 Before using this skill:
 
 - confirm that `PRODUCT.md` exists
-- confirm that `TECH.md` exists when the feature warranted one, and note explicitly when implementation is proceeding from `PRODUCT.md` alone
-- confirm that the relevant specs have been reviewed and approved enough to start implementation
+- confirm that `TECH.md` exists
+- confirm that PRODUCT Review Gate passed
+- confirm that TECH Review Gate passed
+- confirm that `TECH.md` is based on the latest reviewed `PRODUCT.md`
+
+If `TECH.md` is missing, or if `PRODUCT.md` changed after `TECH.md` without a corresponding TECH update, do not implement yet. Return to the relevant spec phase.
 
 ## Workflow
 
@@ -37,9 +41,9 @@ Before using this skill:
 Treat:
 
 - `PRODUCT.md` as the source of truth for user-facing behavior
-- `TECH.md`, when present, as the source of truth for architecture, sequencing, and implementation shape
+- `TECH.md` as the source of truth for architecture, sequencing, tradeoffs, risks, and validation
 
-Make sure you understand the expected behavior, constraints, risks, and validation plan before writing code. If there is no `TECH.md`, inspect the codebase directly and keep the implementation plan small enough that a separate tech spec is not needed; ask the user before making broad architectural choices that were not covered by `PRODUCT.md`.
+Make sure you understand the expected behavior, constraints, risks, and validation plan before writing code.
 
 ### 2. Offer optional implementation aids for large features
 
@@ -57,7 +61,7 @@ Break the work into concrete implementation steps, then implement the feature ag
 During implementation:
 
 - keep behavior aligned with `PRODUCT.md`
-- keep architecture and sequencing aligned with `TECH.md` when present
+- keep architecture and sequencing aligned with `TECH.md`
 - add or update tests and verification artifacts as the work lands
 
 Use the same PR for the specs and implementation when practical so the full feature evolution is reviewable in one place.
@@ -72,11 +76,13 @@ In particular:
 - update `TECH.md` when architecture, sequencing, module boundaries, or validation strategy change
 - keep those updates in the same PR as the corresponding code changes
 
+If a `PRODUCT.md` change invalidates `TECH.md`, update `TECH.md` from the latest reviewed product spec before continuing broad implementation.
+
 The PR should describe the feature that actually ships, not just the initial draft of the specs.
 
 ### 5. Verify against the specs
 
-Before considering the work complete, verify that the code matches the current specs.
+Before considering the work complete, verify that the code matches both current specs.
 
 Prefer:
 

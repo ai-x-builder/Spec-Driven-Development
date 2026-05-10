@@ -1,15 +1,15 @@
 ---
 name: spec-write-tech
-description: Write a TECH.md spec for a significant feature in any product, app, service, API, CLI, library, or data model after researching the current codebase and implementation constraints. Use when the user asks for a technical spec, implementation plan, architecture doc, or validation plan tied to a product spec or behavior-first specification.
+description: Write the TECH.md phase of a gated spec-driven workflow after PRODUCT.md has been reviewed. Use when the user asks for a technical spec, implementation plan, architecture doc, or validation plan derived from an approved product spec or behavior-first specification.
 ---
 
 # spec-write-tech
 
-Write a `TECH.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
+Write the `TECH.md` phase for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
 ## Overview
 
-The tech spec should translate product intent into an implementation plan that fits the existing codebase, documents architectural choices, and makes the work easier for agents to execute and reviewers to evaluate.
+The tech spec should translate reviewed product intent into an implementation plan that fits the existing codebase, documents architectural choices, and makes the work easier for agents to execute and reviewers to evaluate.
 
 Write specs to `specs-driven/<id>/TECH.md`, where `<id>` is one of:
 
@@ -22,15 +22,20 @@ Match the id used by the sibling `PRODUCT.md` when one exists. `specs-driven/` s
 
 Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
-## When to use
+## Prerequisites
 
-Use this skill when the implementation spans multiple modules, has meaningful architectural tradeoffs, or when reviewers will benefit from seeing the plan before or alongside the code. For pure UI changes or straightforward fixes, a tech spec is often unnecessary.
+Before writing `TECH.md`, confirm:
 
-Prefer to have a `PRODUCT.md` first so the technical plan is anchored to agreed behavior. If no `PRODUCT.md` exists and the feature behavior is still unclear, first invoke or suggest `spec-write-product` before drafting `TECH.md`. If the implementation approach is still too uncertain after code research, ask the user before building an e2e prototype; only prototype first when it is explicitly useful and safe, then write the tech spec from what was learned.
+- sibling `PRODUCT.md` exists
+- PRODUCT Review Gate passed because the user explicitly approved `PRODUCT.md`, or explicitly asked to continue to TECH
+- no blocking product open questions remain
+- non-blocking product open questions have recorded assumptions and impact
+
+If any prerequisite is missing, do not write `TECH.md`. Return to `spec-write-product` or ask for the missing review signal.
 
 ## Research before writing
 
-Before drafting, read the product spec (if any), inspect the relevant code, and identify the main files, types, data flow, and ownership boundaries. Do not guess about current architecture when the code can be inspected directly.
+Before drafting, read the latest reviewed `PRODUCT.md`, inspect the relevant code, and identify the main files, types, data flow, and ownership boundaries. Do not guess about current architecture when the code can be inspected directly.
 
 ## Structure
 
@@ -41,7 +46,8 @@ Required sections:
    - `app/src/workspace/workspace.rs (120-220)` — state and event handling that will likely change
    Reference `PRODUCT.md` for user-visible behavior rather than restating it.
 2. **Proposed changes** — The implementation plan: which modules change, new types/APIs/state being introduced, data flow, ownership boundaries, and how the design follows existing patterns. Call out tradeoffs when there is more than one reasonable path.
-3. **Testing and validation** — How the implementation will be verified against the product behavior. Owns everything about proving the feature works: unit tests, integration tests, manual steps, screenshots, videos, and any other verification. Reference the numbered Behavior invariants from `PRODUCT.md` directly rather than restating them; each important invariant should map to a concrete test or verification step. This section is where validation lives — `PRODUCT.md` intentionally does not have a Validation section.
+3. **Product behavior mapping** — Map important numbered Behavior invariants from `PRODUCT.md` to the implementation areas and validation approach. Do not redefine product behavior.
+4. **Testing and validation** — How the implementation will be verified against the product behavior. Owns everything about proving the feature works: unit tests, integration tests, manual steps, screenshots, videos, and any other verification. Reference the numbered Behavior invariants from `PRODUCT.md` directly rather than restating them; each important invariant should map to a concrete test or verification step. This section is where validation lives — `PRODUCT.md` intentionally does not have a Validation section.
 
 Optional sections — include only when they add signal. Omit the heading entirely if empty; do not write "None" as a placeholder.
 
@@ -55,7 +61,7 @@ Optional sections — include only when they add signal. Omit the heading entire
 
 Right-size the spec to the feature:
 
-- Single-file change with clear approach: skip the tech spec or keep it under ~40 lines.
+- Single-file change with clear approach: skip spec-driven workflow entirely, or keep `TECH.md` under ~40 lines if the workflow was already chosen.
 - Multi-module change with some ambiguity: target ~80–150 lines.
 - Large cross-cutting or architecturally novel change: longer is fine when every section earns its place.
 
@@ -67,11 +73,25 @@ If Context and Proposed changes end up describing the same files and state from 
 - Prefer concrete implementation guidance over generic architecture language.
 - Explain why the proposed design fits this repo.
 - Reference `PRODUCT.md` for behavior instead of restating it.
+- If technical research shows product behavior is infeasible or should change, return to `PRODUCT.md`; do not silently redefine behavior in `TECH.md`.
 - Each section should earn its place — if a section would repeat another or contain only boilerplate, omit it.
 
 ## Keep the spec current
 
 Approved specs may ship in the same PR as the implementation. Update `TECH.md` in the same PR when module boundaries, implementation sequencing, risks, validation strategy, or rollout assumptions change. The checked-in spec should describe the implementation that actually ships.
+
+If `PRODUCT.md` changes after `TECH.md` is written, treat the current `TECH.md` as stale until it is updated from the latest reviewed `PRODUCT.md`.
+
+## TECH Review Gate
+
+After writing or materially changing `TECH.md`, stop before implementation. The gate passes only when:
+
+- the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
+- the technical plan is consistent with `PRODUCT.md`
+- risks, module boundaries, and validation steps are clear enough for implementation
+- the implementer can start without redesigning the main approach
+
+If the gate does not pass, revise `TECH.md`. If the revision changes product behavior, update `PRODUCT.md` and pass PRODUCT Review Gate again before updating `TECH.md`.
 
 For large features, the implementer may optionally keep a `DECISIONS.md` file summarizing concrete decisions. Offer it when it would help future agents; otherwise skip it.
 

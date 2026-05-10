@@ -1,11 +1,11 @@
 ---
 name: spec-write-product
-description: Write a PRODUCT.md spec for a significant user-facing feature or externally consumed surface in any product, app, service, API, CLI, library, or data model. Use when the user asks for a product spec, desired behavior doc, PRD, or behavior-first spec, wants to define feature behavior before implementation, or when the feature is substantial or behaviorally ambiguous enough that a written spec would improve implementation or review.
+description: Write the PRODUCT.md phase of a gated spec-driven workflow for a significant user-facing feature or externally consumed surface. Use when the user asks for a product spec, desired behavior doc, PRD, behavior-first spec, or when a substantial or behaviorally ambiguous feature needs PRODUCT.md before TECH.md and implementation.
 ---
 
 # spec-write-product
 
-Write a `PRODUCT.md` spec for a significant feature in the target product, app, service, API, CLI, library, or data model.
+Write only the `PRODUCT.md` phase for a significant feature in the target product, app, service, API, CLI, library, or data model.
 
 ## Overview
 
@@ -20,7 +20,7 @@ The product spec should make the desired behavior unambiguous enough that an age
 
 The spec should describe behavior from that consumer's perspective: the shape of the surface, the operations they can perform, what they see back, invariants they can rely on, and edge cases they must handle — without prescribing how the surface is implemented underneath.
 
-Implementation details, validation, and test planning live in a companion `TECH.md`, produced by the `spec-write-tech` skill. Writing the product spec is usually the first step of a two-step process: once `PRODUCT.md` is agreed on, invoke `spec-write-tech` to produce `TECH.md` for the same feature (or let the user know that's the expected next step). The product spec should be written so the tech spec can be written directly from it.
+Implementation details, validation, and test planning live in a companion `TECH.md`, produced later by the `spec-write-tech` skill. Do not write or update `TECH.md` in the same phase as `PRODUCT.md`. After creating or materially changing `PRODUCT.md`, stop at the PRODUCT Review Gate and wait for the user to approve the product spec or explicitly ask to continue to the TECH phase.
 
 Write specs to `specs-driven/<id>/PRODUCT.md`, where `<id>` is one of:
 
@@ -35,7 +35,14 @@ Ticket / issue references are optional. If the user has a Linear ticket, GitHub 
 
 ## Before writing
 
-Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and validation expectations for later `TECH.md` use only. Ask the user for missing product intent rather than guessing.
+Gather only the context you need: directory id (Linear ticket, GitHub issue, or feature name), feature summary, target users, key behaviors, edge cases, and any source material. Ask the user for missing product intent rather than guessing.
+
+Classify unresolved questions before writing:
+
+- **blocking**: the product behavior cannot be specified safely without an answer
+- **non-blocking**: the spec can proceed with a recorded assumption and impact
+
+Do not advance to TECH while blocking product questions remain.
 
 ### Figma mocks
 
@@ -52,14 +59,14 @@ Do not silently drop design context; an explicit "none" is preferable to no ment
 Required sections:
 
 1. **Summary** — 1–3 sentences describing the feature and desired outcome.
-2. **Behavior** — The meat of the spec. An exhaustive English description of how the feature works, written as numbered, testable invariants. See "The Behavior section" below — this is where the spec earns its length, and everything else should stay thin to avoid duplicating it.
+2. **Behavior** — The meat of the spec. An exhaustive English description of how the feature works, written as stable numbered, testable invariants such as `B1`, `B2`, and `B3`. See "The Behavior section" below — this is where the spec earns its length, and everything else should stay thin to avoid duplicating it.
 
 Optional sections — include only when they add signal beyond the core. Omit the heading entirely if empty; do not write "None" as a placeholder.
 
 - **Problem** — Include only when the motivation isn't obvious from Summary.
 - **Goals / Non-goals** — Include when scope is ambiguous or has been contested.
 - **Figma** — Include with a link when one exists, or an explicit `Figma: none provided` note when design matters but no mock exists. Omit entirely for non-visual features. See "Figma mocks" above.
-- **Open questions** — Prefer inline `**Open question:** …` next to the relevant behavior. Include a dedicated section only if there are multiple unresolved questions worth collecting.
+- **Open questions** — Prefer inline `**Open question (blocking):** ...` or `**Open question (non-blocking):** ...` next to the relevant behavior. Include a dedicated section only if there are multiple unresolved questions worth collecting. Non-blocking questions must state the current assumption and impact.
 
 Do not include Validation, Success criteria, or Testing sections. Validation and test planning live in the companion `TECH.md` (produced by `spec-write-tech`). Write Behavior as numbered invariants that are testable on their own — the tech spec can reference them directly.
 
@@ -103,6 +110,19 @@ If you find yourself writing the same idea in Summary, Problem, Goals, and Behav
 ## Keep the spec current
 
 Approved specs may ship in the same PR as the implementation. As implementation evolves, update `PRODUCT.md` in the same PR when user-facing behavior or UX details change. The checked-in spec should describe the feature that actually ships.
+
+If `PRODUCT.md` changes after `TECH.md` exists, treat the current `TECH.md` as stale until it is updated from the latest reviewed product spec.
+
+## PRODUCT Review Gate
+
+After writing or materially changing `PRODUCT.md`, stop before invoking `spec-write-tech`. The gate passes only when:
+
+- the user explicitly approves `PRODUCT.md`, or explicitly asks to continue to the TECH phase
+- no blocking open questions remain
+- non-blocking open questions have recorded assumptions and impact
+- behavior is concrete enough that the TECH author does not need to guess product intent
+
+If the gate does not pass, revise `PRODUCT.md` and remain in the product phase.
 
 For large features, the implementer may optionally keep a `DECISIONS.md` file summarizing concrete decisions made during design and implementation. Offer it when it would help future agents; otherwise skip it.
 

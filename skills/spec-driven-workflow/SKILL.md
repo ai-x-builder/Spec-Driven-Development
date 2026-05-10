@@ -1,17 +1,17 @@
 ---
 name: spec-driven-workflow
-description: Drive a spec-first workflow for substantial features by writing PRODUCT.md before implementation, writing TECH.md when warranted, and keeping both specs updated as implementation evolves. Use when starting a significant feature, planning agent-driven implementation, or when the user wants product and tech specs checked into source control.
+description: Drive a staged spec-first workflow for substantial features by deciding whether specs are needed, writing PRODUCT.md first, waiting for PRODUCT review before TECH.md, waiting for TECH review before implementation, and keeping both specs current. Use when starting a significant feature, planning agent-driven implementation, or when the user wants gated product and tech specs checked into source control.
 ---
 
 # spec-driven-workflow
 
-Drive a spec-first workflow for substantial features in the target product, app, service, API, CLI, library, or data model.
+Drive a staged spec-first workflow for substantial features in the target product, app, service, API, CLI, library, or data model.
 
 ## Overview
 
-Use this skill for significant features where a written spec will improve implementation quality, reduce ambiguity, or make review easier. Be pragmatic: not every change needs specs.
+Use this skill for significant features where written specs will improve implementation quality, reduce ambiguity, or make review easier. Be pragmatic: not every change needs specs. Small, local, low-risk work can skip this workflow after a brief rationale.
 
-Specs should usually live in:
+Once a task enters spec-driven workflow, both specs are required:
 
 - `specs-driven/<id>/PRODUCT.md`
 - `specs-driven/<id>/TECH.md`
@@ -45,15 +45,29 @@ Specs are often unnecessary for:
 - straightforward refactors
 - narrow UI tweaks with little ambiguity
 
-For pure UI changes, the product spec is often useful while the tech spec may be unnecessary.
+If the change is too small to justify both `PRODUCT.md` and `TECH.md`, do not enter spec-driven workflow. Implement directly and verify instead.
 
 ## Workflow
 
-### 1. Decide whether the feature needs specs
+### 1. Intake
 
-Evaluate the size, ambiguity, and risk of the feature. If specs will not meaningfully improve execution or review, skip them and focus on verification instead.
+Collect enough context to understand the problem and target scope:
 
-### 2. Write the product spec first
+- user request
+- linked ticket, issue, design, or other source material
+- target users or consumers
+- core scenarios and known constraints
+- initial blocking and non-blocking questions
+
+Blocking questions prevent the current phase from advancing. Non-blocking questions can move forward only when the current assumption and impact are recorded.
+
+### 2. Decide whether the feature needs specs
+
+Evaluate the size, ambiguity, and risk of the feature. If specs will not meaningfully improve execution or review, skip this workflow with a brief rationale and focus on implementation and verification.
+
+If you enter spec-driven workflow, do not skip either spec. `PRODUCT.md` must be written and reviewed before `TECH.md`; `TECH.md` must be written and reviewed before implementation.
+
+### 3. Write PRODUCT.md
 
 Before implementation, create `PRODUCT.md` describing the desired user-facing behavior.
 
@@ -63,27 +77,56 @@ Use the `spec-write-product` skill to produce it. The product spec should define
 - the desired user experience
 - invariants and edge cases
 - every user-visible state, transition, and behavior that must not regress
+- blocking and non-blocking product open questions
 
 If the feature has UI or interaction design, ask for a Figma mock if one exists. If there is no mock, continue but call that out explicitly in the product spec.
 
 Reference the source ticket, issue, or feature id in the spec when one exists.
 
-### 3. Write the tech spec when warranted
+Do not generate `TECH.md` in the same phase as `PRODUCT.md`.
 
-Use the `spec-write-tech` skill for substantial or ambiguous implementation work.
+### 4. PRODUCT Review Gate
 
-Prefer a tech spec when:
+After writing or materially changing `PRODUCT.md`, stop before technical planning. The gate passes only when:
 
-- the implementation spans multiple subsystems
-- architecture or extensibility matters
-- there are meaningful tradeoffs to document
-- reviewers will benefit more from reviewing the plan than the raw code
+- the user explicitly approves `PRODUCT.md`, or explicitly asks to continue to the TECH phase
+- no blocking open questions remain
+- non-blocking questions have recorded assumptions and impact
+- the behavior is specific enough that `TECH.md` does not need to guess product intent
 
-It is acceptable to write the tech spec after an e2e prototype if that leads to a more accurate implementation plan. Do not force a premature tech spec when the implementation details are still too uncertain.
+If the gate does not pass, update `PRODUCT.md` and remain in the product phase.
 
-### 4. Implement approved specs
+### 5. Write TECH.md
 
-After the specs are approved, use the `spec-implement` skill to build from the approved `PRODUCT.md` and `TECH.md` when present.
+After the PRODUCT Review Gate passes, use the `spec-write-tech` skill to produce `TECH.md` from the latest reviewed `PRODUCT.md` and current codebase research.
+
+`TECH.md` should cover:
+
+- how the current system works
+- modules, types, interfaces, data flow, or ownership boundaries that will change
+- implementation plan and key tradeoffs
+- risks and mitigations
+- testing and validation plan
+- mapping from numbered `PRODUCT.md` behaviors to concrete verification
+
+`TECH.md` must not redefine product behavior or conflict with `PRODUCT.md`. If technical research shows the product behavior is infeasible or should change, return to the product phase, update `PRODUCT.md`, and pass PRODUCT Review Gate again before updating `TECH.md`.
+
+If `PRODUCT.md` changes after `TECH.md` is generated, treat `TECH.md` as stale until it is updated from the latest reviewed product spec.
+
+### 6. TECH Review Gate
+
+After writing or materially changing `TECH.md`, stop before implementation. The gate passes only when:
+
+- the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
+- the technical plan is consistent with `PRODUCT.md`
+- key risks, module boundaries, and validation steps are clear
+- implementation can start without redesigning the main approach
+
+If the gate does not pass, update `TECH.md`. If the update affects product behavior, update `PRODUCT.md` and pass PRODUCT Review Gate again.
+
+### 7. Implement approved specs
+
+After both review gates pass, use the `spec-implement` skill to build from the approved `PRODUCT.md` and `TECH.md`.
 
 The implementation can often be pushed in the same PR as the product and tech specs. As the engineer iterates, keep `PRODUCT.md`, `TECH.md`, code changes, and tests in that same PR so the review reflects the feature that will actually ship.
 
@@ -94,7 +137,7 @@ For large features, the implementer may optionally offer:
 
 These are optional aids, not required outputs.
 
-### 5. Keep specs current during implementation
+### 8. Keep specs current during implementation
 
 If implementation changes from the spec, update the spec rather than leaving it stale.
 
@@ -113,9 +156,9 @@ Update `TECH.md` when:
 
 The checked-in specs should describe the feature that actually ships, not just the initial intent. Keep those spec updates in the same PR as the related code changes whenever practical.
 
-### 6. Verify behavior against the spec
+### 9. Verify behavior against the specs
 
-Before considering the work complete, make sure verification maps back to the specs. Prefer tests and artifacts that validate the product behavior directly:
+Before considering the work complete, make sure verification maps back to both specs. Prefer tests and artifacts that validate the product behavior directly:
 
 - unit tests using the repository's existing test framework
 - integration or end-to-end tests for critical user flows
@@ -124,7 +167,7 @@ Before considering the work complete, make sure verification maps back to the sp
 ## Best Practices
 
 - Be pragmatic above all else.
-- Write specs to improve input quality for agents, not as ceremony.
+- Skip the workflow for small work; once you enter it, enforce the gates.
 - Keep product specs behavior-oriented and implementation-light.
 - Keep tech specs implementation-oriented and grounded in current codebase patterns.
 - Use review time to validate specs and behavior, not to over-index on code style nits.
