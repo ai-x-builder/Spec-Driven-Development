@@ -15,11 +15,12 @@ Write specs to `specs/<id>/TECH.md`, where `<id>` is one of:
 
 - a Linear ticket number (e.g. `specs/APP-1234/TECH.md`)
 - a GitHub issue id, prefixed with `gh-` (e.g. `specs/gh-4567/TECH.md`)
+- a GitLab issue id, prefixed with `gl-` (e.g. `specs/gl-7890/TECH.md`)
 - a short kebab-case feature name (e.g. `specs/vertical-tabs-hover-sidecar/TECH.md`)
 
 Match the id used by the sibling `PRODUCT.md` when one exists. `specs/` should contain only id-named directories as direct children.
 
-Ticket / issue references are optional. If the user has a Linear ticket or GitHub issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket or GitHub issue when the user explicitly asks for one; in that case use the available Linear or GitHub tools respectively, and ask the user directly if team, labels, or repo are unclear.
+Ticket / issue references are optional. If the user has a Linear ticket, GitHub issue, or GitLab issue, use its id. If they don't, ask them for a feature name to use as the directory. Only create a new Linear ticket, GitHub issue, or GitLab issue when the user explicitly asks for one; in that case use the available Linear, GitHub, or GitLab tools respectively, and ask the user directly if team, labels, or repo are unclear.
 
 ## When to use
 
