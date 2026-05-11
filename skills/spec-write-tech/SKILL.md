@@ -55,10 +55,18 @@ Required sections:
 Optional sections — include only when they add signal. Omit the heading entirely if empty; do not write "None" as a placeholder.
 
 - **End-to-end flow** — Include only when tracing the path through the system tells you something the Proposed changes list doesn't.
-- **Diagram** — Include a Mermaid diagram only when a visual will explain the design faster than prose (data flow, state transitions, sequence across layers). Prefer one or two focused diagrams over decorative ones.
+- **Diagram** — Include a Mermaid diagram when it clarifies non-trivial architecture, data movement, request flow, state transitions, async work, migration sequencing, or integrations faster than prose alone. Prefer one or two focused diagrams over broad or decorative ones, and omit diagrams when the plan is small or clearer as prose and bullets.
 - **Risks and mitigations** — Include when there are real failure modes, regressions, migration concerns, or rollout hazards worth calling out.
 - **Parallelization** — Include when work can cleanly split across multiple agents and that split is non-obvious.
 - **Follow-ups** — Include when there is deferred cleanup or future work worth naming.
+
+### Mermaid diagrams
+
+Use Mermaid diagrams more actively in `TECH.md` than in `PRODUCT.md`, but keep them conditional. Add a diagram when it answers a concrete implementation question: how components interact, how data moves, how a request proceeds through layers, how an async job changes state, how a migration is sequenced, or how external integrations connect.
+
+Choose a Mermaid type that matches the technical need: flowchart for architecture or branching implementation flow, sequence diagram for cross-system calls, state diagram for lifecycles or background jobs, and focused architecture-style flowcharts for system boundaries. Do not add decorative diagrams, oversized diagrams, vague node labels, or diagrams that simply restate a short checklist.
+
+Every diagram must be accompanied by concise prose explaining the design decision, behavior, or data flow that matters. Diagrams complement the technical plan; they do not replace Proposed changes, Product behavior mapping, or Testing and validation.
 
 ## Length heuristic
 
@@ -76,6 +84,7 @@ If Context and Proposed changes end up describing the same files and state from 
 - Prefer concrete implementation guidance over generic architecture language.
 - Explain why the proposed design fits this repo.
 - Reference `PRODUCT.md` for behavior instead of restating it.
+- Use Mermaid diagrams when they materially clarify technical flow or structure, and omit them when prose is clearer.
 - If technical research shows product behavior is infeasible or should change, return to `PRODUCT.md`; do not silently redefine behavior in `TECH.md`.
 - Each section should earn its place — if a section would repeat another or contain only boilerplate, omit it.
 

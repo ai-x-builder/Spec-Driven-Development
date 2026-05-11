@@ -82,6 +82,7 @@ Optional sections — include only when they add signal beyond the core. Omit th
 - **Problem** — Include only when the motivation isn't obvious from Summary.
 - **Goals / Non-goals** — Include when scope is ambiguous or has been contested.
 - **Figma** — Include with a link when one exists, or an explicit `Figma: none provided` note when design matters but no mock exists. Omit entirely for non-visual features. See "Figma mocks" above.
+- **Diagram** — Include a Mermaid diagram only when it clarifies non-trivial product behavior, such as branching user journeys, role or permission interactions, object lifecycle states, complex state transitions, or cross-module product interactions. Omit diagrams for short linear flows or when the diagram would merely duplicate the numbered Behavior list.
 - **Open questions** — Prefer inline `**Open question (blocking):** ...` or `**Open question (non-blocking):** ...` next to the relevant behavior. Include a dedicated section only if there are multiple unresolved questions worth collecting. Non-blocking questions must state the current assumption and impact.
 
 Do not include Validation, Success criteria, or Testing sections. Validation and test planning live in the companion `TECH.md` (produced by `spec-write-tech`). Write Behavior as numbered invariants that are testable on their own — the tech spec can reference them directly.
@@ -104,6 +105,12 @@ Describe, at minimum:
 
 Length Behavior to match the feature. Trivial features may need a handful of invariants; complex features may need many, with sub-sections per flow or state. The rest of the spec should stay thin so Behavior can be as exhaustive as the feature requires without producing a bloated document overall. Err toward enumerating one more edge case rather than one fewer.
 
+### Mermaid diagrams
+
+Use Mermaid diagrams in `PRODUCT.md` sparingly. A diagram is appropriate when it makes complex user-visible behavior easier to review, such as a branched journey, lifecycle, permission path, state transition, or cross-module product interaction. Prefer the Mermaid type that matches the need: flowchart for branching flows, state diagram for lifecycles, and sequence diagram for user-visible cross-system interactions.
+
+Do not include diagrams for simple linear behavior, narrow copy or UI tweaks, or flows that are clearer as numbered invariants. A diagram must complement the Behavior section, not replace it. Required behavior still belongs in stable numbered items, and every diagram should be supported by concise text that explains the important behavior or decision.
+
 ## Length heuristic
 
 Behavior should be as long as the feature requires — do not truncate edge cases to hit a line target. The heuristic below applies to everything around Behavior (Summary, optional sections): keep that framing thin so the spec's total length reflects the feature's actual complexity, not structural overhead.
@@ -120,6 +127,7 @@ If you find yourself writing the same idea in Summary, Problem, Goals, and Behav
 - Prefer concrete, observable behavior over aspirational wording.
 - Write Behavior as a list of invariants rather than prose when possible.
 - Capture invariants that must not regress and edge cases that are easy to miss.
+- Use Mermaid diagrams only when they clarify complex product behavior; avoid decorative, oversized, vague, or redundant diagrams.
 - Avoid implementation details unless unavoidable for the UX.
 - Each section should earn its place — if a section would repeat another or contain only boilerplate, omit it.
 
