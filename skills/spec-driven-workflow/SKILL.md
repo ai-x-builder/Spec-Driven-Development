@@ -118,7 +118,19 @@ Do not generate `TECH.md` in the same phase as `PRODUCT.md`.
 
 ### 4. PRODUCT Review Gate
 
-After writing or materially changing `PRODUCT.md`, stop before technical planning. The gate passes only when:
+After writing or materially changing `PRODUCT.md`, stop before technical planning. Present a concise PRODUCT Review Gate handoff:
+
+- state whether blocking product questions remain
+- if no blockers remain, ask the user to approve `PRODUCT.md` or explicitly request the TECH phase
+- if blockers remain, show a concise list of all blocking product questions so the user can see the full gate scope
+- even when the full blocker list is shown, actively clarify only one blocking question at a time, choosing the one that most directly unlocks the next `PRODUCT.md` revision
+- for the active blocking question, provide suggested answer options only when they reduce user effort or clarify a real product tradeoff; provide one or two options, make them product-behavior choices rather than implementation plans, and mark a recommended option with a short product-focused reason when there is one
+- summarize non-blocking questions as recorded assumptions and impact, not as required answers
+- after the user answers a blocking question, update `PRODUCT.md`, keep both statuses `pending`, and return to the PRODUCT Review Gate
+
+Selecting a suggested option answers only that blocking question. It does not approve the whole `PRODUCT.md` unless the user also explicitly approves the product spec or asks to continue to TECH.
+
+The gate passes only when:
 
 - the user explicitly approves `PRODUCT.md`, or explicitly asks to continue to the TECH phase
 - no blocking open questions remain
