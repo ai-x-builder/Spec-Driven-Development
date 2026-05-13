@@ -96,9 +96,29 @@ If `PRODUCT.md` changes after `TECH.md` is written, treat the current `TECH.md` 
 
 ## TECH Review Gate
 
-After writing or materially changing `TECH.md`, set `tech.status` in `GATES.json` to `pending` and stop before implementation. The gate passes only when:
+After writing or materially changing `TECH.md`, set `tech.status` in `GATES.json` to `pending` and stop before implementation.
+
+Gate handoff requirements:
+
+- state whether blocking technical questions remain
+- if no blockers remain, ask the user to approve `TECH.md` or explicitly request implementation
+- if blockers remain, show a concise list of all blocking technical questions so the user can see the full gate scope
+- even when the full blocker list is shown, ask the user to clarify only one blocking technical question at a time; prioritize the question that most directly unlocks the next `TECH.md` revision
+- treat a blocking technical question as a decision required before safe implementation, such as unclear module ownership, an architecture choice, migration or rollout risk, validation strategy, dependency choice, or another unresolved implementation prerequisite
+- keep active blockers technical; if an answer changes product behavior, user-visible acceptance expectations, or externally observable semantics, update `PRODUCT.md`, set both statuses in `GATES.json` to `pending`, and return to PRODUCT Review Gate before revising TECH again
+- for the active blocking question, provide suggested answer options only when they reduce user effort or clarify a real implementation tradeoff
+- when suggested options are provided, offer one or two options; one option is acceptable when there is a clear recommended path and the user mainly needs to confirm or override it
+- make suggested options concrete technical plan choices, not product behavior changes, and describe the implementation impact, risk, validation impact, or workflow impact
+- when there is a recommended option, mark it as recommended and give a short reason focused on codebase fit, risk reduction, implementation clarity, or validation confidence
+- summarize non-blocking technical questions as the assumptions and impact already recorded in `TECH.md`
+
+If the user answers a blocking technical question, update `TECH.md` to reflect the decision, keep `tech.status` in `GATES.json` as `pending`, and return to the TECH Review Gate. Continue this one-question-at-a-time loop until no blocking technical questions remain. Implementation cannot begin while any blocking technical question remains. Selecting a suggested option answers only that blocking technical question; it does not approve the whole technical spec unless the user also explicitly approves `TECH.md` or asks to continue to implementation.
+
+The gate passes only when:
 
 - the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
+- no blocking technical questions remain
+- non-blocking technical questions have recorded assumptions and impact
 - the technical plan is consistent with `PRODUCT.md`
 - risks, module boundaries, and validation steps are clear enough for implementation
 - the implementer can start without redesigning the main approach

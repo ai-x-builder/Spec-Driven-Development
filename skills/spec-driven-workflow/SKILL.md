@@ -159,9 +159,24 @@ If `PRODUCT.md` changes after `TECH.md` is generated, treat `TECH.md` as stale u
 
 ### 6. TECH Review Gate
 
-After writing or materially changing `TECH.md`, set `tech.status` to `pending` in `GATES.json` and stop before implementation. The gate passes only when:
+After writing or materially changing `TECH.md`, set `tech.status` to `pending` in `GATES.json` and stop before implementation. Present a concise TECH Review Gate handoff:
+
+- state whether blocking technical questions remain
+- if no blockers remain, ask the user to approve `TECH.md` or explicitly request implementation
+- if blockers remain, show a concise list of all blocking technical questions so the user can see the full gate scope
+- even when the full blocker list is shown, actively clarify only one blocking technical question at a time, choosing the one that most directly unlocks the next `TECH.md` revision
+- for the active blocking question, provide suggested answer options only when they reduce user effort or clarify a real implementation tradeoff; provide one or two options, make them technical plan choices rather than product behavior changes, and mark a recommended option with a short reason focused on codebase fit, risk reduction, implementation clarity, or validation confidence when there is one
+- summarize non-blocking technical questions as recorded assumptions and impact, not as required answers
+- if the user's answer changes product behavior, update `PRODUCT.md`, set both statuses to `pending`, and return to PRODUCT Review Gate before revising TECH again
+- otherwise, after the user answers a blocking technical question, update `TECH.md`, keep `tech.status` as `pending`, and return to the TECH Review Gate
+
+Implementation cannot begin while any blocking technical question remains. Selecting a suggested option answers only that blocking technical question. It does not approve the whole `TECH.md` unless the user also explicitly approves the technical spec or asks to continue to implementation.
+
+The gate passes only when:
 
 - the user explicitly approves `TECH.md`, or explicitly asks to continue to implementation
+- no blocking technical questions remain
+- non-blocking technical questions have recorded assumptions and impact
 - the technical plan is consistent with `PRODUCT.md`
 - key risks, module boundaries, and validation steps are clear
 - implementation can start without redesigning the main approach
